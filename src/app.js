@@ -27,6 +27,9 @@ const dashboardRoutes = require('./routes/dashboard.routes');
 // ...
 app.use('/api/learning', learningRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+const codingRoutes = require('./routes/coding.routes');
+// ...
+app.use('/api/coding', codingRoutes);
 
 // Routes
 app.use('/api/health', healthRoutes);
