@@ -58,4 +58,4 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, createProfile, updateProfile };
+module.exports = { getProfile, createProfile, updateProfile };Y
