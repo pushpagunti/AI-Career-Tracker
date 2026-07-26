@@ -1,9 +1,14 @@
 const Profile = require('../models/Profile.model');
 
-// @route GET /api/profile
+
+// @desc    Get logged-in user's profile
+// @route   GET /api/profile
+// @access  Private
 const getProfile = async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id });
+    const profile = await Profile.findOne({
+      user: req.user.id,
+    }).populate('user', 'name email role');
 
     if (!profile) {
       return res.status(404).json({
@@ -12,38 +17,94 @@ const getProfile = async (req, res) => {
       });
     }
 
-    res.status(200).json({ status: 'success', data: { profile } });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        profile,
+      },
+    });
+
   } catch (error) {
-    res.status(500).json({ status: 'error', message: 'Server error fetching profile' });
+    console.error('Get Profile Error:', error);
+
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error fetching profile',
+    });
   }
 };
 
-// @route POST /api/profile
+
+
+// @desc    Create profile
+// @route   POST /api/profile
+// @access  Private
 const createProfile = async (req, res) => {
   try {
-    const existing = await Profile.findOne({ user: req.user.id });
-    if (existing) {
+
+    const existingProfile = await Profile.findOne({
+      user: req.user.id,
+    });
+
+
+    if (existingProfile) {
       return res.status(400).json({
         status: 'fail',
         message: 'Profile already exists. Use update instead.',
       });
     }
 
-    const profile = await Profile.create({ ...req.body, user: req.user.id });
-    res.status(201).json({ status: 'success', data: { profile } });
+
+    const profile = await Profile.create({
+      ...req.body,
+      user: req.user.id,
+    });
+
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        profile,
+      },
+    });
+
+
   } catch (error) {
-    res.status(500).json({ status: 'error', message: 'Server error creating profile' });
+
+    console.error('Create Profile Error:', error);
+
+
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error creating profile',
+    });
+
   }
 };
 
-// @route PUT /api/profile
+
+
+
+// @desc    Update profile
+// @route   PUT /api/profile
+// @access  Private
 const updateProfile = async (req, res) => {
   try {
+
+
     const profile = await Profile.findOneAndUpdate(
-      { user: req.user.id },
-      { $set: req.body },
-      { new: true, runValidators: true } // return updated doc, still enforce schema rules
+      {
+        user: req.user.id,
+      },
+      {
+        $set: req.body,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
     );
+
 
     if (!profile) {
       return res.status(404).json({
@@ -52,10 +113,32 @@ const updateProfile = async (req, res) => {
       });
     }
 
-    res.status(200).json({ status: 'success', data: { profile } });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        profile,
+      },
+    });
+
+
   } catch (error) {
-    res.status(500).json({ status: 'error', message: 'Server error updating profile' });
+
+    console.error('Update Profile Error:', error);
+
+
+    res.status(500).json({
+      status: 'error',
+      message: 'Server error updating profile',
+    });
+
   }
 };
 
-module.exports = { getProfile, createProfile, updateProfile };Y
+
+
+module.exports = {
+  getProfile,
+  createProfile,
+  updateProfile,
+};

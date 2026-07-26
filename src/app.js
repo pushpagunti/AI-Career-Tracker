@@ -22,6 +22,11 @@ app.use('/api/profile', profileRoutes);
 const skillRoutes = require('./routes/skill.routes');
 
 app.use('/api/skills', skillRoutes);
+const learningRoutes = require('./routes/learning.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
+// ...
+app.use('/api/learning', learningRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Routes
 app.use('/api/health', healthRoutes);
