@@ -27,6 +27,7 @@ const sendTokenResponse = (user, statusCode, res) => {
   });
 };
 
+
 // @desc    Register a new user
 // @route   POST /api/auth/register
 const register = async (req, res) => {
@@ -49,6 +50,7 @@ const register = async (req, res) => {
     });
 
     sendTokenResponse(user, 201, res);
+
   } catch (error) {
     console.error('Register Error:', error);
 
@@ -58,6 +60,7 @@ const register = async (req, res) => {
     });
   }
 };
+
 
 // @desc    Login user
 // @route   POST /api/auth/login
@@ -84,6 +87,7 @@ const login = async (req, res) => {
     }
 
     sendTokenResponse(user, 200, res);
+
   } catch (error) {
     console.error('Login Error:', error);
 
@@ -94,9 +98,11 @@ const login = async (req, res) => {
   }
 };
 
+
 // @desc    Logout user
 // @route   POST /api/auth/logout
 const logout = (req, res) => {
+
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
@@ -108,8 +114,25 @@ const logout = (req, res) => {
   });
 };
 
+
+// @desc    Get currently logged in user
+// @route   GET /api/auth/me
+const getMe = async (req, res) => {
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: req.user,
+    },
+  });
+
+};
+
+
+// Export controllers
 module.exports = {
   register,
   login,
   logout,
+  getMe,
 };

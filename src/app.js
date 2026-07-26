@@ -15,6 +15,9 @@ app.use(
     credentials: true, // allows cookies to be sent cross-origin
   })
 );
+const profileRoutes = require('./routes/profile.routes');
+// ...
+app.use('/api/profile', profileRoutes);
 
 // Routes
 app.use('/api/health', healthRoutes);
