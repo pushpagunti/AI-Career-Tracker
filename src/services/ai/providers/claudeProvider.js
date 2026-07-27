@@ -25,4 +25,5 @@ const complete = async (prompt, responseType) => {
   return textBlock ? textBlock.text : '';
 };
 
+
 module.exports = { complete };

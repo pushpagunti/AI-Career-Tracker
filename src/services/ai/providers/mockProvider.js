@@ -95,17 +95,47 @@ const mockRoadmap = {
   ],
 };
 
+const mockInterviewQuestions = (questionCount) => ({
+  questions: Array.from({ length: questionCount }, (_, i) =>
+    i === 0
+      ? 'Tell me about a challenging project you worked on and how you approached it.'
+      : `Mock technical question ${i + 1} for this role.`
+  ),
+});
+
+const mockAnswerEvaluation = {
+  score: 7,
+  strengths: [
+    'Clear structure in your answer',
+    'Good use of a concrete example',
+  ],
+  improvements: [
+    'Could go deeper into trade-offs considered',
+    'Mention specific tools/technologies used',
+  ],
+  modelAnswerNotes:
+    'A strong answer would also quantify the impact and discuss what you would do differently.',
+};
+
 // Simulates an AI provider call
 const complete = async (
   prompt,
-  responseType = 'careerRecommendation'
+  responseType = 'careerRecommendation',
+  options = {}
 ) => {
   // Simulate API latency
   await new Promise((resolve) => setTimeout(resolve, 500));
 
+  if (responseType === 'interviewQuestions') {
+    return JSON.stringify(
+      mockInterviewQuestions(options.questionCount || 5)
+    );
+  }
+
   const mockResponses = {
     careerRecommendation: mockCareerRecommendation,
     roadmap: mockRoadmap,
+    answerEvaluation: mockAnswerEvaluation,
   };
 
   return JSON.stringify(mockResponses[responseType] || {});

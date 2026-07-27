@@ -115,6 +115,78 @@ const getRoadmap = async ({ targetRole, skills, experienceLevel }) => {
 
   return { parsed, rawResponse };
 };
+const buildInterviewQuestionsPrompt = require('./prompts/interviewQuestions.prompt');
+const buildAnswerEvaluationPrompt = require('./prompts/answerEvaluation.prompt');
+
+// ... keep everything already there
+
+const validateInterviewQuestionsShape = (data, expectedCount) => {
+  if (!data || !Array.isArray(data.questions) || data.questions.length === 0) {
+    throw new Error('Invalid response shape: missing questions array');
+  }
+  data.questions.forEach((q, i) => {
+    if (typeof q !== 'string' || !q.trim()) {
+      throw new Error(`Question ${i}: invalid or empty`);
+    }
+  });
+  return true;
+};
+
+const validateAnswerEvaluationShape = (data) => {
+  if (!data || typeof data.score !== 'number' || data.score < 1 || data.score > 10) {
+    throw new Error('Invalid response shape: score must be a number between 1 and 10');
+  }
+  if (!Array.isArray(data.strengths) || !Array.isArray(data.improvements)) {
+    throw new Error('Invalid response shape: strengths/improvements must be arrays');
+  }
+  if (typeof data.modelAnswerNotes !== 'string') {
+    throw new Error('Invalid response shape: modelAnswerNotes must be a string');
+  }
+  return true;
+};
+
+const getInterviewQuestions = async ({ role, difficulty, questionCount }) => {
+  const provider = getActiveProvider();
+  const prompt = buildInterviewQuestionsPrompt({ role, difficulty, questionCount });
+
+  const rawResponse = await provider.complete(prompt, 'interviewQuestions', { questionCount });
+  const cleaned = cleanJsonResponse(rawResponse);
+
+  let parsed;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch (err) {
+    throw new Error('AI response was not valid JSON');
+  }
+
+  validateInterviewQuestionsShape(parsed, questionCount);
+  return { parsed, rawResponse };
+};
+
+const getAnswerEvaluation = async ({ role, question, answer }) => {
+  const provider = getActiveProvider();
+  const prompt = buildAnswerEvaluationPrompt({ role, question, answer });
+
+  const rawResponse = await provider.complete(prompt, 'answerEvaluation');
+  const cleaned = cleanJsonResponse(rawResponse);
+
+  let parsed;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch (err) {
+    throw new Error('AI response was not valid JSON');
+  }
+
+  validateAnswerEvaluationShape(parsed);
+  return { parsed, rawResponse };
+};
+
+module.exports = {
+  getCareerRecommendation,
+  getRoadmap,
+  getInterviewQuestions,
+  getAnswerEvaluation,
+};
 
 module.exports = { getCareerRecommendation, getRoadmap };
 

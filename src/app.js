@@ -45,6 +45,9 @@ app.use('/api/career', careerRoutes);
 const roadmapRoutes = require('./routes/roadmap.routes');
 // ...
 app.use('/api/roadmap', roadmapRoutes);
+const interviewRoutes = require('./routes/interview.routes');
+// ...
+app.use('/api/interview', interviewRoutes);
 
 // Routes
 app.use('/api/health', healthRoutes);
