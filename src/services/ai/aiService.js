@@ -71,4 +71,52 @@ const getCareerRecommendation = async ({ skills, experienceLevel, careerGoal }) 
   return { parsed, rawResponse };
 };
 
+const buildRoadmapPrompt = require('./prompts/roadmapGenerator.prompt');
+
+// ... (keep everything already in the file: cleanJsonResponse, getActiveProvider, etc.)
+
+const validateRoadmapShape = (data) => {
+  if (!data || !Array.isArray(data.stages) || data.stages.length === 0) {
+    throw new Error('Invalid response shape: missing stages array');
+  }
+
+  data.stages.forEach((stage, i) => {
+    if (typeof stage.stageTitle !== 'string' || !stage.stageTitle) {
+      throw new Error(`Stage ${i}: missing or invalid 'stageTitle'`);
+    }
+    if (!Array.isArray(stage.topics) || stage.topics.length === 0) {
+      throw new Error(`Stage ${i}: 'topics' must be a non-empty array`);
+    }
+    stage.topics.forEach((topic, j) => {
+      if (typeof topic.topic !== 'string' || !topic.topic) {
+        throw new Error(`Stage ${i}, topic ${j}: missing or invalid 'topic'`);
+      }
+    });
+  });
+
+  return true;
+};
+
+const getRoadmap = async ({ targetRole, skills, experienceLevel }) => {
+  const provider = getActiveProvider();
+  const prompt = buildRoadmapPrompt({ targetRole, skills, experienceLevel });
+
+  const rawResponse = await provider.complete(prompt, 'roadmap');
+  const cleaned = cleanJsonResponse(rawResponse);
+
+  let parsed;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch (err) {
+    throw new Error('AI response was not valid JSON');
+  }
+
+  validateRoadmapShape(parsed);
+
+  return { parsed, rawResponse };
+};
+
+module.exports = { getCareerRecommendation, getRoadmap };
+
+
 module.exports = { getCareerRecommendation };

@@ -42,6 +42,9 @@ app.use('/api/ats', atsRoutes);
 const careerRoutes = require('./routes/career.routes');
 // ...
 app.use('/api/career', careerRoutes);
+const roadmapRoutes = require('./routes/roadmap.routes');
+// ...
+app.use('/api/roadmap', roadmapRoutes);
 
 // Routes
 app.use('/api/health', healthRoutes);
