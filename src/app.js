@@ -53,6 +53,10 @@ const jobRoutes = require('./routes/job.routes');
 // ...
 app.use('/api/jobs', jobRoutes);
 
+const analyticsRoutes = require('./routes/analytics.routes');
+// ...
+app.use('/api/analytics', analyticsRoutes);
+
 // Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
