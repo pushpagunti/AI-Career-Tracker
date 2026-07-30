@@ -49,6 +49,10 @@ const interviewRoutes = require('./routes/interview.routes');
 // ...
 app.use('/api/interview', interviewRoutes);
 
+const jobRoutes = require('./routes/job.routes');
+// ...
+app.use('/api/jobs', jobRoutes);
+
 // Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);

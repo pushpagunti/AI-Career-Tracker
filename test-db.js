@@ -1,18 +1,35 @@
-const { MongoClient } = require("mongodb");
+require('dotenv').config();
 
-const uri = "mongodb+srv://pushpagunti6_db_user:HCsQlFFwlN6guyoo@ai-career-tracker-clust.sszruo4.mongodb.net/?appName=ai-career-tracker-cluster";
+const dns = require('dns');
+const mongoose = require('mongoose');
 
-const client = new MongoClient(uri);
+// Use Google's DNS servers
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
-async function run() {
+async function testConnection() {
   try {
-    await client.connect();
-    console.log("MongoDB connected successfully");
-  } catch (err) {
-    console.log(err);
-  } finally {
-    await client.close();
+    console.log('=====================================');
+    console.log('Testing MongoDB Atlas Connection...');
+    console.log('=====================================');
+
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+
+    console.log('✅ Connected Successfully!');
+    console.log('Host      :', conn.connection.host);
+    console.log('Database  :', conn.connection.name);
+    console.log('=====================================');
+
+    await mongoose.disconnect();
+
+    console.log('Disconnected successfully.');
+    process.exit(0);
+  } catch (error) {
+    console.log('=====================================');
+    console.log('❌ Connection Failed');
+    console.error(error);
+    console.log('=====================================');
+    process.exit(1);
   }
 }
 
-run();
+testConnection();
