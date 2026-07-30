@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-     "seed:jobs": "node src/scripts/seedJobs.js"
+    "seed:jobs": "node src/scripts/seedJobs.js",
+    "make:admin": "node src/scripts/makeAdmin.js"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +28,4 @@
   "devDependencies": {
     "nodemon": "^3.1.14"
   }
-  
 }
-
- 

@@ -10,10 +10,17 @@ const protect = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id); // attach user to request
+    req.user = await User.findById(decoded.id);
 
     if (!req.user) {
       return res.status(401).json({ status: 'fail', message: 'User no longer exists' });
+    }
+
+    if (!req.user.isActive) {
+      return res.status(403).json({
+        status: 'fail',
+        message: 'This account has been disabled. Contact support if you believe this is an error.',
+      });
     }
 
     next();

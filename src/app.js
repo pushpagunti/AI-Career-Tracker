@@ -61,6 +61,10 @@ const notificationRoutes = require('./routes/notification.routes');
 // ...
 app.use('/api/notifications', notificationRoutes);
 
+const adminRoutes = require('./routes/admin.routes');
+// ...
+app.use('/api/admin', adminRoutes);
+
 // Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
