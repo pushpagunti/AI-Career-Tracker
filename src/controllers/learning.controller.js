@@ -1,7 +1,9 @@
 const LearningItem = require('../models/LearningItem.model');
+const Roadmap = require('../models/Roadmap.model');
+const { createNotification } = require('../services/notification.service');
 
 
-// @route GET /api/learning?status=in-progress
+// @route GET /api/learning
 // @access Private
 const getLearningItems = async (req, res) => {
   try {
@@ -22,11 +24,15 @@ const getLearningItems = async (req, res) => {
 
 
     res.status(200).json({
+
       status: 'success',
+
       results: items.length,
+
       data: {
         items
       }
+
     });
 
 
@@ -35,8 +41,11 @@ const getLearningItems = async (req, res) => {
     console.error("Get Learning Items Error:", error);
 
     res.status(500).json({
+
       status: 'error',
+
       message: error.message
+
     });
 
   }
@@ -70,6 +79,7 @@ const addLearningItem = async (req, res) => {
       startedAt = new Date();
 
     }
+
 
 
     if (progress === 100) {
@@ -112,7 +122,7 @@ const addLearningItem = async (req, res) => {
 
 
 
-  } catch (error) {
+  } catch(error) {
 
 
     console.error("Add Learning Item Error:", error);
@@ -166,15 +176,23 @@ const updateLearningItem = async (req, res) => {
 
 
 
+    const wasAlreadyCompleted = item.status === 'completed';
+
+
 
     Object.assign(item, req.body);
 
 
 
-    // Auto calculate status
+    item.user = req.user.id;
 
-    if (item.progressPercent === 0) {
 
+
+    const progress = item.progressPercent || 0;
+
+
+
+    if(progress === 0){
 
       item.status = 'not-started';
 
@@ -183,35 +201,33 @@ const updateLearningItem = async (req, res) => {
       item.completedAt = null;
 
 
-    } 
-    else if (item.progressPercent === 100) {
+    } else if(progress === 100){
 
 
       item.status = 'completed';
 
 
-      if (!item.startedAt) {
+      if(!item.startedAt){
 
         item.startedAt = new Date();
 
       }
 
 
-      if (!item.completedAt) {
+      if(!item.completedAt){
 
         item.completedAt = new Date();
 
       }
 
 
-    } 
-    else {
+    } else {
 
 
       item.status = 'in-progress';
 
 
-      if (!item.startedAt) {
+      if(!item.startedAt){
 
         item.startedAt = new Date();
 
@@ -225,7 +241,61 @@ const updateLearningItem = async (req, res) => {
 
 
 
+
     await item.save();
+
+
+
+
+    // Roadmap completion notification
+    if(!wasAlreadyCompleted && item.status === 'completed'){
+
+
+      const linkedRoadmap = await Roadmap.findOne({
+
+        user:req.user.id,
+
+        'progressLinks.learningItem': item._id
+
+      });
+
+
+
+      if(linkedRoadmap){
+
+
+        const linkedTopic = linkedRoadmap.progressLinks.find(
+
+          (p)=> 
+            p.learningItem &&
+            p.learningItem.toString() === item._id.toString()
+
+        );
+
+
+
+        if(linkedTopic){
+
+
+          await createNotification(
+
+            req.user.id,
+
+            'roadmap',
+
+            `✅ You completed "${linkedTopic.topic}" on your ${linkedRoadmap.targetRole} roadmap!`,
+
+            `/roadmap/${linkedRoadmap._id}`
+
+          );
+
+
+        }
+
+      }
+
+
+    }
 
 
 
@@ -241,7 +311,7 @@ const updateLearningItem = async (req, res) => {
 
 
 
-  } catch(error) {
+  } catch(error){
 
 
     console.error("Update Learning Item Error:", error);
@@ -255,6 +325,7 @@ const updateLearningItem = async (req, res) => {
 
     });
 
+
   }
 
 };
@@ -264,12 +335,11 @@ const updateLearningItem = async (req, res) => {
 
 
 
-
 // @route DELETE /api/learning/:id
 // @access Private
-const deleteLearningItem = async (req, res) => {
+const deleteLearningItem = async (req,res)=>{
 
-  try {
+  try{
 
 
     const item = await LearningItem.findOneAndDelete({
@@ -282,7 +352,7 @@ const deleteLearningItem = async (req, res) => {
 
 
 
-    if (!item) {
+    if(!item){
 
       return res.status(404).json({
 
@@ -306,7 +376,7 @@ const deleteLearningItem = async (req, res) => {
 
 
 
-  } catch(error) {
+  }catch(error){
 
 
     console.error("Delete Learning Item Error:", error);
@@ -324,6 +394,7 @@ const deleteLearningItem = async (req, res) => {
   }
 
 };
+
 
 
 

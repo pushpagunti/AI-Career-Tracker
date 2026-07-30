@@ -57,6 +57,10 @@ const analyticsRoutes = require('./routes/analytics.routes');
 // ...
 app.use('/api/analytics', analyticsRoutes);
 
+const notificationRoutes = require('./routes/notification.routes');
+// ...
+app.use('/api/notifications', notificationRoutes);
+
 // Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
