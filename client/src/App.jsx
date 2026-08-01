@@ -15,7 +15,8 @@ import RoadmapList from './pages/roadmap/RoadmapList';
 import RoadmapDetail from './pages/roadmap/RoadmapDetail';
 import InterviewStart from './pages/interview/InterviewStart';
 import InterviewSessionPage from './pages/interview/InterviewSession';
-
+import JobRecommendations from './pages/jobs/JobRecommendations';
+import Analytics from './pages/analytics/Analytics';
 function App() {
   return (
     <Routes>
@@ -32,7 +33,8 @@ function App() {
       <Route path="/roadmap/:id" element={<RoadmapDetail />} />
       <Route path="/interview" element={<InterviewStart />} />
       <Route path="/interview/:id" element={<InterviewSessionPage />} />
-
+      <Route path="/jobs" element={<JobRecommendations />} />
+      <Route path="/analytics" element={<Analytics />} />
       <Route
         element={
           <ProtectedRoute>

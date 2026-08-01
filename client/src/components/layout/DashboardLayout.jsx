@@ -21,6 +21,8 @@ const DashboardLayout = () => {
         <Link to="/career" className="text-sm text-gray-600 hover:text-gray-900">Career AI</Link>
         <Link to="/roadmap" className="text-sm text-gray-600 hover:text-gray-900">Roadmap</Link>
         <Link to="/interview" className="text-sm text-gray-600 hover:text-gray-900">Mock Interview</Link>
+        <Link to="/jobs" className="text-sm text-gray-600 hover:text-gray-900">Jobs</Link>
+        <Link to="/analytics" className="text-sm text-gray-600 hover:text-gray-900">Analytics</Link>
         </div>
           <span className="text-sm text-gray-600">Hi, {user?.name}</span>
           <Button variant="secondary" onClick={logout}>
