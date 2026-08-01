@@ -5,6 +5,7 @@ import { downloadResumePdf } from '../../api/resume.api';
 import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import AtsScoreSection from './AtsScoreSection';
 
 const emptyResume = {
   title: '',
@@ -84,6 +85,7 @@ const ResumeBuilder = () => {
           <Button onClick={handleSave} isLoading={updateMutation.isPending}>
             Save
           </Button>
+          <AtsScoreSection resumeId={id} />
         </div>
       </div>
 
