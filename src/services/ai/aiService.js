@@ -188,7 +188,3 @@ module.exports = {
   getAnswerEvaluation,
 };
 
-module.exports = { getCareerRecommendation, getRoadmap };
-
-
-module.exports = { getCareerRecommendation };

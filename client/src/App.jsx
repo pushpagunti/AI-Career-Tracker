@@ -10,6 +10,11 @@ import Learning from './pages/learning/Learning';
 import Coding from './pages/coding/Coding';
 import ResumeList from './pages/resume/ResumeList';
 import ResumeBuilder from './pages/resume/ResumeBuilder';
+import CareerRecommendation from './pages/career/CareerRecommendation';
+import RoadmapList from './pages/roadmap/RoadmapList';
+import RoadmapDetail from './pages/roadmap/RoadmapDetail';
+import InterviewStart from './pages/interview/InterviewStart';
+import InterviewSessionPage from './pages/interview/InterviewSession';
 
 function App() {
   return (
@@ -22,6 +27,11 @@ function App() {
       <Route path="/coding" element={<Coding />} />
       <Route path="/resumes" element={<ResumeList />} />
       <Route path="/resumes/:id" element={<ResumeBuilder />} />
+      <Route path="/career" element={<CareerRecommendation />} />
+      <Route path="/roadmap" element={<RoadmapList />} />
+      <Route path="/roadmap/:id" element={<RoadmapDetail />} />
+      <Route path="/interview" element={<InterviewStart />} />
+      <Route path="/interview/:id" element={<InterviewSessionPage />} />
 
       <Route
         element={

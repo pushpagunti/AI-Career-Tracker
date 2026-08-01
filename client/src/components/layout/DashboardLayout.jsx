@@ -18,6 +18,9 @@ const DashboardLayout = () => {
         <Link to="/learning" className="text-sm text-gray-600 hover:text-gray-900">Learning</Link>
         <Link to="/coding" className="text-sm text-gray-600 hover:text-gray-900">Coding</Link>
         <Link to="/resumes" className="text-sm text-gray-600 hover:text-gray-900">Resumes</Link>
+        <Link to="/career" className="text-sm text-gray-600 hover:text-gray-900">Career AI</Link>
+        <Link to="/roadmap" className="text-sm text-gray-600 hover:text-gray-900">Roadmap</Link>
+        <Link to="/interview" className="text-sm text-gray-600 hover:text-gray-900">Mock Interview</Link>
         </div>
           <span className="text-sm text-gray-600">Hi, {user?.name}</span>
           <Button variant="secondary" onClick={logout}>
