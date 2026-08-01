@@ -24,6 +24,9 @@ const DashboardLayout = () => {
         <Link to="/interview" className="text-sm text-gray-600 hover:text-gray-900">Mock Interview</Link>
         <Link to="/jobs" className="text-sm text-gray-600 hover:text-gray-900">Jobs</Link>
         <Link to="/analytics" className="text-sm text-gray-600 hover:text-gray-900">Analytics</Link>
+                {user?.role === 'admin' && (
+        <Link to="/admin/users" className="text-sm text-purple-600 font-medium hover:text-purple-800">Admin</Link>
+        )}
         <div className="flex items-center gap-4">
         <NotificationBell />
         <span className="text-sm text-gray-600">Hi, {user?.name}</span>
