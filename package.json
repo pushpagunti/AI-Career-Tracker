@@ -23,7 +23,8 @@
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.8.0",
-    "puppeteer": "^25.3.0"
+    "puppeteer": "^25.3.0",
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
