@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../ui/Button';
 import { Link } from 'react-router-dom';
+import NotificationBell from './NotificationBell';
 
 const DashboardLayout = () => {
   const { user, logout } = useAuth();
@@ -23,6 +24,11 @@ const DashboardLayout = () => {
         <Link to="/interview" className="text-sm text-gray-600 hover:text-gray-900">Mock Interview</Link>
         <Link to="/jobs" className="text-sm text-gray-600 hover:text-gray-900">Jobs</Link>
         <Link to="/analytics" className="text-sm text-gray-600 hover:text-gray-900">Analytics</Link>
+        <div className="flex items-center gap-4">
+        <NotificationBell />
+        <span className="text-sm text-gray-600">Hi, {user?.name}</span>
+        <Button variant="secondary" onClick={logout}>Log Out</Button>
+        </div>
         </div>
           <span className="text-sm text-gray-600">Hi, {user?.name}</span>
           <Button variant="secondary" onClick={logout}>
