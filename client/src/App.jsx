@@ -8,6 +8,9 @@ import Profile from './pages/profile/Profile';
 import Skills from './pages/skills/Skills';
 import Learning from './pages/learning/Learning';
 import Coding from './pages/coding/Coding';
+import ResumeList from './pages/resume/ResumeList';
+import ResumeBuilder from './pages/resume/ResumeBuilder';
+
 function App() {
   return (
     <Routes>
@@ -17,6 +20,8 @@ function App() {
       <Route path="/skills" element={<Skills />} />
       <Route path="/learning" element={<Learning />} />
       <Route path="/coding" element={<Coding />} />
+      <Route path="/resumes" element={<ResumeList />} />
+      <Route path="/resumes/:id" element={<ResumeBuilder />} />
 
       <Route
         element={

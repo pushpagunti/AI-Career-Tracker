@@ -17,6 +17,7 @@ const DashboardLayout = () => {
         <Link to="/skills" className="text-sm text-gray-600 hover:text-gray-900">Skills</Link>
         <Link to="/learning" className="text-sm text-gray-600 hover:text-gray-900">Learning</Link>
         <Link to="/coding" className="text-sm text-gray-600 hover:text-gray-900">Coding</Link>
+        <Link to="/resumes" className="text-sm text-gray-600 hover:text-gray-900">Resumes</Link>
         </div>
           <span className="text-sm text-gray-600">Hi, {user?.name}</span>
           <Button variant="secondary" onClick={logout}>
