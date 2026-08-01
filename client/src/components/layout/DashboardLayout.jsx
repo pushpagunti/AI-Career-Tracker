@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../ui/Button';
+import { Link } from 'react-router-dom';
 
 const DashboardLayout = () => {
   const { user, logout } = useAuth();
@@ -10,6 +11,11 @@ const DashboardLayout = () => {
       <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
         <span className="font-bold text-lg">AI Career Tracker</span>
         <div className="flex items-center gap-4">
+                    <div className="flex gap-4">
+        <Link to="/dashboard" className="text-sm text-gray-600 hover:text-gray-900">Dashboard</Link>
+        <Link to="/profile" className="text-sm text-gray-600 hover:text-gray-900">Profile</Link>
+        <Link to="/skills" className="text-sm text-gray-600 hover:text-gray-900">Skills</Link>
+        </div>
           <span className="text-sm text-gray-600">Hi, {user?.name}</span>
           <Button variant="secondary" onClick={logout}>
             Log Out
