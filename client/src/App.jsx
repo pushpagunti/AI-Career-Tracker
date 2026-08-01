@@ -6,6 +6,8 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Profile from './pages/profile/Profile';
 import Skills from './pages/skills/Skills';
+import Learning from './pages/learning/Learning';
+import Coding from './pages/coding/Coding';
 function App() {
   return (
     <Routes>
@@ -13,6 +15,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/skills" element={<Skills />} />
+      <Route path="/learning" element={<Learning />} />
+      <Route path="/coding" element={<Coding />} />
 
       <Route
         element={
