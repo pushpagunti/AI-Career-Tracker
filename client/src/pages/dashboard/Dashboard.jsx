@@ -8,22 +8,21 @@ const statusColors = {
   'in-progress': 'bg-blue-100 text-blue-700',
   completed: 'bg-green-100 text-green-700',
 };
-const { data, isLoading, isError } = useDashboard();
-
-if (isLoading) return <p>Loading your dashboard...</p>;
-if (isError) return <p className="text-red-600">Failed to load dashboard. Please try refreshing.</p>;
-
-const { skillsSummary, learningSummary, recentActivity } = data.data;
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { data, isLoading, error } = useDashboard();
+
+  const {
+    data,
+    isLoading,
+    isError,
+  } = useDashboard();
 
   if (isLoading) {
     return <p>Loading your dashboard...</p>;
   }
 
-  if (error || !data) {
+  if (isError || !data) {
     return (
       <div className="text-center mt-10">
         <p className="text-red-500">
@@ -33,7 +32,15 @@ const Dashboard = () => {
     );
   }
 
-  const { skillsSummary, learningSummary, recentActivity } = data;
+  // Support both API shapes:
+  // { data: {...} } and { ... }
+  const dashboard = data.data || data;
+
+  const {
+    skillsSummary,
+    learningSummary,
+    recentActivity,
+  } = dashboard;
 
   return (
     <div>
@@ -76,7 +83,6 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-
         <Card>
           <h3 className="font-semibold mb-3">
             Skills by Category
@@ -84,8 +90,11 @@ const Dashboard = () => {
 
           {!skillsSummary?.byCategory?.length ? (
             <p className="text-sm text-gray-400">
-              No skills tracked yet.
-              <Link to="/skills" className="text-blue-600 hover:underline">
+              No skills tracked yet.{" "}
+              <Link
+                to="/skills"
+                className="text-blue-600 hover:underline"
+              >
                 Add some
               </Link>
             </p>
@@ -96,14 +105,18 @@ const Dashboard = () => {
                   key={c._id}
                   className="flex justify-between text-sm"
                 >
-                  <span className="capitalize">{c._id}</span>
-                  <span className="text-gray-500">{c.count}</span>
+                  <span className="capitalize">
+                    {c._id}
+                  </span>
+
+                  <span className="text-gray-500">
+                    {c.count}
+                  </span>
                 </div>
               ))}
             </div>
           )}
         </Card>
-
 
         <Card>
           <h3 className="font-semibold mb-3">
@@ -124,7 +137,9 @@ const Dashboard = () => {
                   <span>{item.title}</span>
 
                   <span
-                    className={`text-xs px-2 py-1 rounded-full ${statusColors[item.status]}`}
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      statusColors[item.status]
+                    }`}
                   >
                     {item.status}
                   </span>
@@ -133,12 +148,9 @@ const Dashboard = () => {
             </div>
           )}
         </Card>
-
       </div>
 
-
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-
         <Link to="/skills">
           <Card className="text-center hover:shadow-md cursor-pointer">
             ➕ Add Skill
@@ -162,9 +174,7 @@ const Dashboard = () => {
             🎤 Mock Interview
           </Card>
         </Link>
-
       </div>
-
     </div>
   );
 };
