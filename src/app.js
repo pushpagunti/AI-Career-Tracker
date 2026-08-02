@@ -1,9 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-//const mongoSanitize = require('express-mongo-sanitize');
 
+const sanitizeInput = require('./middleware/sanitize.middleware');
 const { generalLimiter } = require('./middleware/rateLimiter');
 
 const healthRoutes = require('./routes/health.routes');
@@ -25,11 +27,11 @@ const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 
-// Security Middleware
+// Security
 app.use(helmet());
-//app.use(mongoSanitize());
+app.use(sanitizeInput);
 
-// Body Parser
+// Body Parsing
 app.use(express.json());
 app.use(cookieParser());
 
@@ -37,7 +39,9 @@ app.use(cookieParser());
 app.use('/api', generalLimiter);
 
 // CORS
-const allowedOrigins = process.env.CLIENT_URL.split(',').map((url) => url.trim());
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((url) => url.trim());
 
 app.use(
   cors({
@@ -69,5 +73,15 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  res.status(err.status || 500).json({
+    status: 'error',
+    message: err.message || 'Internal Server Error',
+  });
+});
 
 module.exports = app;

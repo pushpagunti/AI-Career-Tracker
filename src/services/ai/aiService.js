@@ -1,4 +1,4 @@
-const mockProvider = require('./providers/mockProvider');
+const mockProvider = require('../ai/providers/mockProvider');
 const claudeProvider = require('./providers/claudeProvider');
 const buildCareerRecommendationPrompt = require('./prompts/careerRecommendation.prompt');
 
