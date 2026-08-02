@@ -1,3 +1,4 @@
+const { authLimiter } = require('../middleware/rateLimiter');
 const express = require('express');
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.get('/me', protect, getMe);
 
 
 // Auth routes
-router.post('/register', registerValidation, validateRequest, register);
+router.post('/register',  authLimiter,registerValidation, validateRequest, register);
 
 router.post('/login', loginValidation, validateRequest, login);
 

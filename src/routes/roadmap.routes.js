@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { aiLimiter } = require('../middleware/rateLimiter');
 const {
   generateRoadmap,
   getRoadmaps,
@@ -16,5 +17,6 @@ router.get('/', getRoadmaps);
 router.get('/:id', getRoadmapById);
 router.post('/:id/link-topic', linkTopic);
 router.delete('/:id', deleteRoadmap);
+router.post('/generate', aiLimiter, generateRoadmap);  
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { aiLimiter } = require('../middleware/rateLimiter');
 const {
   startInterview,
   submitAnswer,
@@ -16,5 +17,7 @@ router.get('/', getInterviews);
 router.get('/:id', getInterviewById);
 router.post('/:sessionId/answer', submitAnswer);
 router.post('/:id/complete', completeInterview);
+router.post('/start', aiLimiter, startInterview);
+router.post('/:sessionId/answer', aiLimiter, submitAnswer);    
 
 module.exports = router;

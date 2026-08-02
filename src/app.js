@@ -1,72 +1,73 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+//const mongoSanitize = require('express-mongo-sanitize');
+
+const { generalLimiter } = require('./middleware/rateLimiter');
+
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
+const profileRoutes = require('./routes/profile.routes');
+const skillRoutes = require('./routes/skill.routes');
+const learningRoutes = require('./routes/learning.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
+const codingRoutes = require('./routes/coding.routes');
+const resumeRoutes = require('./routes/resume.routes');
+const atsRoutes = require('./routes/ats.routes');
+const careerRoutes = require('./routes/career.routes');
+const roadmapRoutes = require('./routes/roadmap.routes');
+const interviewRoutes = require('./routes/interview.routes');
+const jobRoutes = require('./routes/job.routes');
+const analyticsRoutes = require('./routes/analytics.routes');
+const notificationRoutes = require('./routes/notification.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 
-// Middleware
+// Security Middleware
+app.use(helmet());
+//app.use(mongoSanitize());
+
+// Body Parser
 app.use(express.json());
 app.use(cookieParser());
+
+// Rate Limiter
+app.use('/api', generalLimiter);
+
+// CORS
+const allowedOrigins = process.env.CLIENT_URL.split(',').map((url) => url.trim());
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true, // allows cookies to be sent cross-origin
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
   })
 );
-const profileRoutes = require('./routes/profile.routes');
-// ...
-app.use('/api/profile', profileRoutes);
-
-const skillRoutes = require('./routes/skill.routes');
-
-app.use('/api/skills', skillRoutes);
-const learningRoutes = require('./routes/learning.routes');
-const dashboardRoutes = require('./routes/dashboard.routes');
-// ...
-app.use('/api/learning', learningRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-const codingRoutes = require('./routes/coding.routes');
-// ...
-app.use('/api/coding', codingRoutes);
-
-const resumeRoutes = require('./routes/resume.routes');
-// ...
-app.use('/api/resumes', resumeRoutes);
-
-const atsRoutes = require('./routes/ats.routes');
-// ...
-app.use('/api/ats', atsRoutes);
-
-const careerRoutes = require('./routes/career.routes');
-// ...
-app.use('/api/career', careerRoutes);
-const roadmapRoutes = require('./routes/roadmap.routes');
-// ...
-app.use('/api/roadmap', roadmapRoutes);
-const interviewRoutes = require('./routes/interview.routes');
-// ...
-app.use('/api/interview', interviewRoutes);
-
-const jobRoutes = require('./routes/job.routes');
-// ...
-app.use('/api/jobs', jobRoutes);
-
-const analyticsRoutes = require('./routes/analytics.routes');
-// ...
-app.use('/api/analytics', analyticsRoutes);
-
-const notificationRoutes = require('./routes/notification.routes');
-// ...
-app.use('/api/notifications', notificationRoutes);
-
-const adminRoutes = require('./routes/admin.routes');
-// ...
-app.use('/api/admin', adminRoutes);
 
 // Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/skills', skillRoutes);
+app.use('/api/learning', learningRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/coding', codingRoutes);
+app.use('/api/resumes', resumeRoutes);
+app.use('/api/ats', atsRoutes);
+app.use('/api/career', careerRoutes);
+app.use('/api/roadmap', roadmapRoutes);
+app.use('/api/interview', interviewRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/admin', adminRoutes);
 
 module.exports = app;

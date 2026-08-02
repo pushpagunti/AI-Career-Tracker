@@ -4,14 +4,12 @@ const generateToken = require('../utils/generateToken');
 // Helper: Send JWT as httpOnly cookie
 const sendTokenResponse = (user, statusCode, res) => {
   const token = generateToken(user._id, user.role);
-
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   };
-
   res.cookie('token', token, cookieOptions);
 
   res.status(statusCode).json({
