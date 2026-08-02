@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import './index.css';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundary from "./components/ErrorBoundary";
 <QueryClientProvider client={queryClient}>
   <BrowserRouter>
     <ErrorBoundary>
