@@ -36,7 +36,7 @@ app.set("trust proxy", 1);
 // Security
 // =====================================
 app.use(helmet());
-app.use(sanitizeInput());
+app.use(sanitizeInput);
 
 // =====================================
 // Body Parsing
