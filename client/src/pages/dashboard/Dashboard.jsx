@@ -8,36 +8,94 @@ const statusColors = {
   'in-progress': 'bg-blue-100 text-blue-700',
   completed: 'bg-green-100 text-green-700',
 };
+const { data, isLoading, isError } = useDashboard();
+
+if (isLoading) return <p>Loading your dashboard...</p>;
+if (isError) return <p className="text-red-600">Failed to load dashboard. Please try refreshing.</p>;
+
+const { skillsSummary, learningSummary, recentActivity } = data.data;
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { data, isLoading } = useDashboard();
+  const { data, isLoading, error } = useDashboard();
 
-  if (isLoading) return <p>Loading your dashboard...</p>;
+  if (isLoading) {
+    return <p>Loading your dashboard...</p>;
+  }
 
-  const { skillsSummary, learningSummary, recentActivity } = data.data;
+  if (error || !data) {
+    return (
+      <div className="text-center mt-10">
+        <p className="text-red-500">
+          Unable to load dashboard. Please login again.
+        </p>
+      </div>
+    );
+  }
+
+  const { skillsSummary, learningSummary, recentActivity } = data;
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1">Welcome back, {user?.name}</h1>
-      <p className="text-gray-500 mb-6">Here's where you stand today.</p>
+      <h1 className="text-2xl font-bold mb-1">
+        Welcome back, {user?.name}
+      </h1>
+
+      <p className="text-gray-500 mb-6">
+        Here's where you stand today.
+      </p>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card><p className="text-sm text-gray-500">Total Skills</p><p className="text-2xl font-bold">{skillsSummary.totalSkills}</p></Card>
-        <Card><p className="text-sm text-gray-500">Learning Items</p><p className="text-2xl font-bold">{learningSummary.totalItems}</p></Card>
-        <Card><p className="text-sm text-gray-500">Completed</p><p className="text-2xl font-bold">{learningSummary.completed}</p></Card>
-        <Card><p className="text-sm text-gray-500">Completion Rate</p><p className="text-2xl font-bold">{learningSummary.completionRate}%</p></Card>
+        <Card>
+          <p className="text-sm text-gray-500">Total Skills</p>
+          <p className="text-2xl font-bold">
+            {skillsSummary?.totalSkills || 0}
+          </p>
+        </Card>
+
+        <Card>
+          <p className="text-sm text-gray-500">Learning Items</p>
+          <p className="text-2xl font-bold">
+            {learningSummary?.totalItems || 0}
+          </p>
+        </Card>
+
+        <Card>
+          <p className="text-sm text-gray-500">Completed</p>
+          <p className="text-2xl font-bold">
+            {learningSummary?.completed || 0}
+          </p>
+        </Card>
+
+        <Card>
+          <p className="text-sm text-gray-500">Completion Rate</p>
+          <p className="text-2xl font-bold">
+            {learningSummary?.completionRate || 0}%
+          </p>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
         <Card>
-          <h3 className="font-semibold mb-3">Skills by Category</h3>
-          {skillsSummary.byCategory.length === 0 ? (
-            <p className="text-sm text-gray-400">No skills tracked yet. <Link to="/skills" className="text-blue-600 hover:underline">Add some</Link>.</p>
+          <h3 className="font-semibold mb-3">
+            Skills by Category
+          </h3>
+
+          {!skillsSummary?.byCategory?.length ? (
+            <p className="text-sm text-gray-400">
+              No skills tracked yet.
+              <Link to="/skills" className="text-blue-600 hover:underline">
+                Add some
+              </Link>
+            </p>
           ) : (
             <div className="space-y-2">
               {skillsSummary.byCategory.map((c) => (
-                <div key={c._id} className="flex justify-between text-sm">
+                <div
+                  key={c._id}
+                  className="flex justify-between text-sm"
+                >
                   <span className="capitalize">{c._id}</span>
                   <span className="text-gray-500">{c.count}</span>
                 </div>
@@ -46,29 +104,67 @@ const Dashboard = () => {
           )}
         </Card>
 
+
         <Card>
-          <h3 className="font-semibold mb-3">Recent Learning Activity</h3>
-          {recentActivity.length === 0 ? (
-            <p className="text-sm text-gray-400">Nothing logged yet. <Link to="/learning" className="text-blue-600 hover:underline">Start tracking</Link>.</p>
+          <h3 className="font-semibold mb-3">
+            Recent Learning Activity
+          </h3>
+
+          {!recentActivity?.length ? (
+            <p className="text-sm text-gray-400">
+              Nothing logged yet.
+            </p>
           ) : (
             <div className="space-y-2">
               {recentActivity.map((item) => (
-                <div key={item.id} className="flex justify-between items-center text-sm">
+                <div
+                  key={item.id}
+                  className="flex justify-between items-center text-sm"
+                >
                   <span>{item.title}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full ${statusColors[item.status]}`}>{item.status}</span>
+
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${statusColors[item.status]}`}
+                  >
+                    {item.status}
+                  </span>
                 </div>
               ))}
             </div>
           )}
         </Card>
+
       </div>
 
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Link to="/skills"><Card className="text-center hover:shadow-md cursor-pointer">➕ Add Skill</Card></Link>
-        <Link to="/coding"><Card className="text-center hover:shadow-md cursor-pointer">💻 Log Problem</Card></Link>
-        <Link to="/resumes"><Card className="text-center hover:shadow-md cursor-pointer">📄 Build Resume</Card></Link>
-        <Link to="/interview"><Card className="text-center hover:shadow-md cursor-pointer">🎤 Mock Interview</Card></Link>
+
+        <Link to="/skills">
+          <Card className="text-center hover:shadow-md cursor-pointer">
+            ➕ Add Skill
+          </Card>
+        </Link>
+
+        <Link to="/coding">
+          <Card className="text-center hover:shadow-md cursor-pointer">
+            💻 Log Problem
+          </Card>
+        </Link>
+
+        <Link to="/resumes">
+          <Card className="text-center hover:shadow-md cursor-pointer">
+            📄 Build Resume
+          </Card>
+        </Link>
+
+        <Link to="/interview">
+          <Card className="text-center hover:shadow-md cursor-pointer">
+            🎤 Mock Interview
+          </Card>
+        </Link>
+
       </div>
+
     </div>
   );
 };
