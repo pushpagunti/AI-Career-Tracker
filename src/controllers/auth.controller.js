@@ -3,13 +3,19 @@ const generateToken = require('../utils/generateToken');
 
 // Helper: Send JWT as httpOnly cookie
 const sendTokenResponse = (user, statusCode, res) => {
-  const token = generateToken(user._id, user.role);
+  const token = generateToken(user._id);
+
   const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: true,           // Required for HTTPS (Render + Vercel)
+    sameSite: 'none',       // Required for cross-site cookies
     maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: '/',
   };
+
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('Cookie Options:', cookieOptions);
+
   res.cookie('token', token, cookieOptions);
 
   res.status(statusCode).json({
@@ -24,7 +30,6 @@ const sendTokenResponse = (user, statusCode, res) => {
     },
   });
 };
-
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -58,7 +63,6 @@ const register = async (req, res) => {
     });
   }
 };
-
 
 // @desc    Login user
 // @route   POST /api/auth/login
@@ -96,14 +100,14 @@ const login = async (req, res) => {
   }
 };
 
-
 // @desc    Logout user
 // @route   POST /api/auth/logout
 const logout = (req, res) => {
-
-  res.cookie('token', 'none', {
-    expires: new Date(Date.now() + 10 * 1000),
+  res.clearCookie('token', {
     httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    path: '/',
   });
 
   res.status(200).json({
@@ -112,22 +116,17 @@ const logout = (req, res) => {
   });
 };
 
-
 // @desc    Get currently logged in user
 // @route   GET /api/auth/me
 const getMe = async (req, res) => {
-
   res.status(200).json({
     status: 'success',
     data: {
       user: req.user,
     },
   });
-
 };
 
-
-// Export controllers
 module.exports = {
   register,
   login,

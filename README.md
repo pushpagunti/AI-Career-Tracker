@@ -6,9 +6,11 @@ Built as a full-stack portfolio project demonstrating production-oriented backen
 
 ## Demo
 
-<!-- TODO: Add screenshots or a short GIF here once deployed. Suggested shots: Dashboard, Resume Builder, Mock Interview flow, Analytics charts. -->
+## Demo
 
-**Live demo:** _[link once deployed]_
+**Live Demo:**  
+https://ai-career-tracker-h5dt.vercel.app
+
 
 ## Features
 
@@ -122,3 +124,25 @@ ai-career-tracker/
 ## License
 
 This project was built as an academic minor project and personal portfolio piece.
+
+## Screenshots
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+### Resume Analyzer
+
+![Resume Analyzer](screenshots/resume.png)
+
+### AI Roadmap
+
+![Roadmap](screenshots/roadmap.png)
+
+### Mock Interview
+
+![Interview](screenshots/interview.png)
+
+### Analytics
+
+![Analytics](screenshots/analytics.png)

@@ -26,7 +26,7 @@ router.get('/me', protect, getMe);
 // Auth routes
 router.post('/register',  authLimiter,registerValidation, validateRequest, register);
 
-router.post('/login', loginValidation, validateRequest, login);
+router.post('/login', authLimiter, loginValidation, validateRequest, login);
 
 router.post('/logout', protect, logout);
 
