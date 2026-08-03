@@ -53,13 +53,10 @@ const Learning = () => {
     return <p>Loading learning items...</p>;
   }
 
-
-  if (error || !data) {
+  if (!data) {
     return (
       <div className="text-center mt-10">
-        <p className="text-red-500">
-          Please login to view learning progress.
-        </p>
+        <p>No learning data available.</p>
       </div>
     );
   }
