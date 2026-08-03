@@ -1,7 +1,15 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../hooks/useDashboard';
-import Card from '../../components/ui/Card';
+import Card from "../../components/ui/Card";
+import StatCard from "../../components/ui/StatCard";
+import {
+  Layers,
+  BookOpen,
+  CheckCircle2,
+  TrendingUp,
+} from "lucide-react";
+import PageTransition from "../../components/layout/PageTransition";
 
 const statusColors = {
   'not-started': 'bg-gray-100 text-gray-700',
@@ -52,35 +60,45 @@ const Dashboard = () => {
         Here's where you stand today.
       </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card>
-          <p className="text-sm text-gray-500">Total Skills</p>
-          <p className="text-2xl font-bold">
-            {skillsSummary?.totalSkills || 0}
-          </p>
-        </Card>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <StatCard
+        icon={Layers}
+        label="Total Skills"
+        value={skillsSummary?.totalSkills || 0}
+        color="blue"
+        index={0}
+      />
 
-        <Card>
-          <p className="text-sm text-gray-500">Learning Items</p>
-          <p className="text-2xl font-bold">
-            {learningSummary?.totalItems || 0}
-          </p>
-        </Card>
+      <StatCard
+        icon={BookOpen}
+        label="Learning Items"
+        value={learningSummary?.totalItems || 0}
+        color="purple"
+        index={1}
+      />
 
-        <Card>
-          <p className="text-sm text-gray-500">Completed</p>
-          <p className="text-2xl font-bold">
-            {learningSummary?.completed || 0}
-          </p>
-        </Card>
+      <StatCard
+        icon={CheckCircle2}
+        label="Completed"
+        value={learningSummary?.completed || 0}
+        color="green"
+        trend={
+          learningSummary?.totalItems
+            ? `${learningSummary.completed}/${learningSummary.totalItems}`
+            : null
+        }
+        index={2}
+      />
 
-        <Card>
-          <p className="text-sm text-gray-500">Completion Rate</p>
-          <p className="text-2xl font-bold">
-            {learningSummary?.completionRate || 0}%
-          </p>
-        </Card>
-      </div>
+      <StatCard
+        icon={TrendingUp}
+        label="Completion Rate"
+        value={learningSummary?.completionRate || 0}
+        suffix="%"
+        color="orange"
+        index={3}
+      />
+    </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <Card>
@@ -176,6 +194,13 @@ const Dashboard = () => {
         </Link>
       </div>
     </div>
+  );
+   return (
+    <PageTransition>
+      <div>
+        {/* existing dashboard */}
+      </div>
+    </PageTransition>
   );
 };
 

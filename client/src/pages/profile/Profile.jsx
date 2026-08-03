@@ -5,6 +5,7 @@ import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
 import Button from '../../components/ui/Button';
 
+
 const EXPERIENCE_OPTIONS = [
   { value: 'student', label: 'Student' },
   { value: 'entry', label: 'Entry Level' },
@@ -95,6 +96,7 @@ const Profile = () => {
       </Card>
     </div>
   );
+
 };
 
 export default Profile;

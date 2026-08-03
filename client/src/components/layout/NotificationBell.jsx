@@ -1,8 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useNotifications, useUnreadCount, useMarkAsRead, useMarkAllAsRead } from '../../hooks/useNotifications';
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  useNotifications,
+  useUnreadCount,
+  useMarkAsRead,
+  useMarkAllAsRead,
+} from "../../hooks/useNotifications";
+import { Bell } from "lucide-react";
 
-const typeIcons = { streak: '🔥', roadmap: '🗺️', career: '💼', system: '🔔' };
+const typeIcons = {
+  streak: "🔥",
+  roadmap: "🗺️",
+  career: "💼",
+  system: "🔔",
+};
 
 const NotificationBell = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,28 +22,37 @@ const NotificationBell = () => {
 
   const { data: notifData } = useNotifications();
   const { data: countData } = useUnreadCount();
+
   const markReadMutation = useMarkAsRead();
   const markAllReadMutation = useMarkAllAsRead();
 
   const unreadCount = countData?.data?.count || 0;
   const notifications = notifData?.data?.notifications || [];
 
-  // Close dropdown when clicking outside it
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleNotificationClick = (notification) => {
     if (!notification.isRead) {
       markReadMutation.mutate(notification._id);
     }
+
     setIsOpen(false);
+
     if (notification.link) {
       navigate(notification.link);
     }
@@ -40,49 +60,84 @@ const NotificationBell = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button onClick={() => setIsOpen(!isOpen)} className="relative p-2 hover:bg-gray-100 rounded-full">
-        🔔
+      {/* Notification Button */}
+      <button
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+      >
+        <Bell
+          size={20}
+          className="text-gray-700 dark:text-gray-300"
+        />
+
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-            {unreadCount > 9 ? '9+' : unreadCount}
+          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
+            {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </button>
 
+      {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-100 max-h-96 overflow-y-auto z-50">
-          <div className="flex justify-between items-center p-3 border-b">
-            <span className="font-semibold text-sm">Notifications</span>
+        <div className="absolute right-0 mt-3 w-80 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900 z-50">
+
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
+            <h3 className="font-semibold text-gray-900 dark:text-white">
+              Notifications
+            </h3>
+
             {unreadCount > 0 && (
               <button
                 onClick={() => markAllReadMutation.mutate()}
-                className="text-xs text-blue-600 hover:underline"
+                className="text-xs font-medium text-indigo-600 hover:text-indigo-700"
               >
-                Mark all read
+                Mark all
               </button>
             )}
           </div>
 
+          {/* Empty State */}
           {notifications.length === 0 ? (
-            <p className="p-4 text-sm text-gray-400 text-center">No notifications yet.</p>
+            <div className="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+              No notifications yet.
+            </div>
           ) : (
-            notifications.map((n) => (
-              <div
-                key={n._id}
-                onClick={() => handleNotificationClick(n)}
-                className={`p-3 border-b last:border-0 cursor-pointer hover:bg-gray-50 ${
-                  !n.isRead ? 'bg-blue-50' : ''
-                }`}
-              >
-                <div className="flex gap-2">
-                  <span>{typeIcons[n.type] || '🔔'}</span>
-                  <div>
-                    <p className="text-sm text-gray-800">{n.message}</p>
-                    <p className="text-xs text-gray-400 mt-1">{new Date(n.createdAt).toLocaleString()}</p>
+            <div className="max-h-96 overflow-y-auto">
+              {notifications.map((notification) => (
+                <button
+                  key={notification._id}
+                  onClick={() =>
+                    handleNotificationClick(notification)
+                  }
+                  className={`flex w-full gap-3 border-b border-gray-100 px-4 py-3 text-left transition hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800 ${
+                    !notification.isRead
+                      ? "bg-indigo-50 dark:bg-indigo-950/30"
+                      : ""
+                  }`}
+                >
+                  <div className="text-xl">
+                    {typeIcons[notification.type] || "🔔"}
                   </div>
-                </div>
-              </div>
-            ))
+
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-800 dark:text-white">
+                      {notification.message}
+                    </p>
+
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      {new Date(
+                        notification.createdAt
+                      ).toLocaleString()}
+                    </p>
+                  </div>
+
+                  {!notification.isRead && (
+                    <div className="mt-2 h-2 w-2 rounded-full bg-indigo-500" />
+                  )}
+                </button>
+              ))}
+            </div>
           )}
         </div>
       )}
